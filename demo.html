@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weatherford — Procurement AI · Indicative Demo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F5F7;
+  --card: #FFFFFF;
+  --border: rgba(0,0,0,0.07);
+  --border-light: rgba(0,0,0,0.04);
+  --text: #1D1D1F;
+  --text-secondary: #424245;
+  --text-dim: #6E6E73;
+  --text-muted: #86868B;
+  --brand: #E31837;
+  --brand-light: rgba(227,24,55,0.08);
+  --brand-mid: rgba(227,24,55,0.15);
+  --green: #10B981;
+  --green-bg: rgba(16,185,129,0.08);
+  --amber: #F59E0B;
+  --amber-bg: rgba(245,158,11,0.08);
+  --red: #EF4444;
+  --red-bg: rgba(239,68,68,0.08);
+  --blue: #3B82F6;
+  --blue-bg: rgba(59,130,246,0.08);
+  --purple: #8B5CF6;
+  --purple-bg: rgba(139,92,246,0.08);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.06), 0 4px 6px -4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:var(--font); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.12); border-radius:10px; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+@keyframes shimmer { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+.header {
+  background:rgba(255,255,255,0.8);
+  border-bottom:1px solid var(--border);
+  padding:0 40px; height:60px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+  backdrop-filter:blur(20px);
+}
+.logo { display:flex; align-items:center; gap:10px; }
+.logo-mark { width:28px; height:28px; background:var(--brand); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+.logo-mark svg { width:16px; height:16px; fill:white; }
+.logo-name { font-size:15px; font-weight:700; letter-spacing:-0.3px; }
+.logo-div { width:1px; height:18px; background:var(--border); margin:0 12px; }
+.logo-product { font-size:13px; font-weight:600; color:var(--brand); }
+.header-right { display:flex; align-items:center; gap:10px; }
+.nav-tabs { display:flex; background:#F3F4F6; border-radius:10px; padding:3px; gap:2px; }
+.nav-tab { padding:6px 16px; border-radius:8px; border:none; background:transparent; color:var(--text-muted); cursor:pointer; font-size:13px; font-weight:500; font-family:var(--font); transition:all 0.2s; white-space:nowrap; }
+.nav-tab.active { background:#fff; color:var(--text); box-shadow:var(--shadow-sm); font-weight:600; }
+.indicative-badge { display:flex; align-items:center; gap:5px; padding:5px 12px; border-radius:20px; background:var(--amber-bg); font-size:11px; font-weight:600; color:var(--amber); text-transform:uppercase; letter-spacing:0.5px; }
+
+.page { padding:28px 40px; max-width:1320px; margin:0 auto; animation:fadeIn 0.3s ease; }
+
+/* COVER */
+.cover-hero { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; margin-bottom:48px; }
+.cover-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--brand); margin-bottom:16px; }
+.cover-title { font-size:44px; font-weight:800; letter-spacing:-1.5px; line-height:1.08; margin-bottom:16px; }
+.cover-title span { color:var(--brand); }
+.cover-sub { font-size:16px; color:var(--text-dim); line-height:1.65; margin-bottom:32px; }
+.cover-stats { display:flex; gap:32px; }
+.stat-val { font-size:30px; font-weight:800; letter-spacing:-1px; color:var(--brand); }
+.stat-lbl { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:3px; font-weight:500; }
+.cover-visual { width:100%; aspect-ratio:1.3; background:linear-gradient(135deg,#FEF2F2,#FFF5F5,#FEF2F2); border-radius:var(--radius-lg); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; box-shadow:var(--shadow-lg); }
+.cover-features { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.cover-feature { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow-sm); transition:all 0.3s; cursor:pointer; }
+.cover-feature:hover { box-shadow:var(--shadow-lg); transform:translateY(-3px); }
+.feature-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:14px; }
+.feature-title { font-size:14px; font-weight:700; margin-bottom:6px; }
+.feature-body { font-size:13px; color:var(--text-dim); line-height:1.6; }
+
+/* FLOW DIAGRAM */
+.flow { display:flex; align-items:center; gap:0; overflow-x:auto; padding:24px 0; }
+.flow-node { flex-shrink:0; width:130px; text-align:center; }
+.flow-box { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 8px; box-shadow:var(--shadow-sm); position:relative; min-height:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.flow-box.highlight { border-color:var(--brand); background:var(--brand-light); }
+.flow-box.ai-node { border-color:var(--brand); border-width:2px; }
+.flow-box.tcs { border-color:var(--amber); background:var(--amber-bg); }
+.flow-icon { font-size:18px; margin-bottom:4px; }
+.flow-label { font-size:11px; font-weight:600; color:var(--text); line-height:1.3; }
+.flow-sub { font-size:9px; color:var(--text-muted); margin-top:2px; line-height:1.2; }
+.flow-arrow { font-size:16px; color:var(--text-muted); flex-shrink:0; margin:0 3px; }
+.flow-arrow.brand { color:var(--brand); font-weight:700; }
+.ai-badge { position:absolute; top:-8px; left:50%; transform:translateX(-50%); background:var(--brand); color:white; font-size:8px; font-weight:700; padding:2px 8px; border-radius:20px; white-space:nowrap; letter-spacing:0.05em; }
+
+/* EXCEPTION QUEUE */
+.two-col { display:grid; grid-template-columns:340px 1fr; gap:20px; height:calc(100vh - 140px); }
+.three-col { display:grid; grid-template-columns:300px 1fr 340px; gap:16px; height:calc(100vh - 140px); }
+.panel { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow-sm); }
+.panel-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.panel-title { font-size:13px; font-weight:700; color:var(--text); }
+.panel-badge { font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px; }
+.panel-body { flex:1; overflow-y:auto; }
+
+.queue-item { padding:14px 18px; border-bottom:1px solid var(--border-light); cursor:pointer; transition:background 0.15s; }
+.queue-item:hover { background:#FAFAFA; }
+.queue-item.active { background:var(--brand-light); }
+.queue-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+.queue-id { font-size:12px; font-weight:700; font-family:'Courier New',monospace; color:var(--text); }
+.queue-type { font-size:9px; font-weight:700; padding:2px 7px; border-radius:20px; text-transform:uppercase; letter-spacing:0.05em; }
+.type-T { background:#DBEAFE; color:#1D4ED8; }
+.type-E { background:var(--red-bg); color:var(--red); }
+.type-D { background:var(--amber-bg); color:var(--amber); }
+.type-C { background:var(--purple-bg); color:var(--purple); }
+.queue-desc { font-size:12px; color:var(--text-dim); line-height:1.5; margin-bottom:4px; }
+.queue-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; }
+
+/* DETAIL VIEW */
+.detail-section { padding:18px; border-bottom:1px solid var(--border-light); }
+.detail-label { font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.detail-field { font-size:12px; }
+.detail-field-label { color:var(--text-muted); font-weight:500; }
+.detail-field-value { color:var(--text); font-weight:600; margin-top:1px; }
+
+.recommendation-card { border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; }
+.recommendation-card.approve { background:var(--green-bg); border:1px solid rgba(16,185,129,0.2); }
+.recommendation-card.review { background:var(--amber-bg); border:1px solid rgba(245,158,11,0.2); }
+.recommendation-card.reject { background:var(--red-bg); border:1px solid rgba(239,68,68,0.2); }
+.rec-header { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.rec-icon { font-size:16px; }
+.rec-title { font-size:13px; font-weight:700; }
+.recommendation-card.approve .rec-title { color:var(--green); }
+.recommendation-card.review .rec-title { color:var(--amber); }
+.recommendation-card.reject .rec-title { color:var(--red); }
+.rec-body { font-size:13px; color:var(--text-secondary); line-height:1.6; }
+.rec-confidence { font-size:11px; font-weight:600; margin-top:8px; display:flex; align-items:center; gap:6px; }
+.conf-bar { height:4px; border-radius:4px; background:#E5E7EB; flex:1; max-width:120px; overflow:hidden; }
+.conf-fill { height:100%; border-radius:4px; }
+.conf-fill.high { background:var(--green); }
+.conf-fill.med { background:var(--amber); }
+
+.action-btns { display:flex; gap:8px; padding:18px; border-top:1px solid var(--border); }
+.action-btn { flex:1; padding:10px; border-radius:var(--radius-sm); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:var(--font); border:none; }
+.action-btn.primary { background:var(--brand); color:white; }
+.action-btn.primary:hover { background:#c41530; }
+.action-btn.secondary { background:#F3F4F6; color:var(--text-secondary); border:1px solid var(--border); }
+.action-btn.secondary:hover { background:#E5E7EB; }
+
+/* OQ TABLE */
+.oq-table { width:100%; border-collapse:collapse; font-size:13px; }
+.oq-table th { padding:10px 14px; text-align:left; font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-muted); border-bottom:1px solid var(--border); background:#FAFAFA; position:sticky; top:0; }
+.oq-table td { padding:11px 14px; border-bottom:1px solid var(--border-light); vertical-align:middle; }
+.oq-table tr:hover td { background:#FAFAFA; }
+.oq-table tr.ai-row td { background:var(--brand-light); }
+.status-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+.pill-green { background:var(--green-bg); color:var(--green); }
+.pill-amber { background:var(--amber-bg); color:var(--amber); }
+.pill-red { background:var(--red-bg); color:var(--red); }
+.pill-blue { background:var(--blue-bg); color:var(--blue); }
+.pill-brand { background:var(--brand-light); color:var(--brand); }
+
+/* APPROVAL CARDS */
+.approval-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; padding:20px; }
+.approval-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow-sm); transition:all 0.2s; }
+.approval-card:hover { box-shadow:var(--shadow-md); }
+.approval-card.flagged { border-left:3px solid var(--amber); }
+.approval-card.auto { border-left:3px solid var(--green); }
+.approval-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.approval-or { font-size:12px; font-weight:700; font-family:'Courier New',monospace; }
+.approval-amount { font-size:16px; font-weight:800; letter-spacing:-0.5px; }
+.approval-details { font-size:12px; color:var(--text-dim); line-height:1.6; margin-bottom:12px; }
+.approval-footer { display:flex; justify-content:space-between; align-items:center; }
+.approval-action { font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px; cursor:pointer; border:none; font-family:var(--font); }
+.approval-action.approve { background:var(--green); color:white; }
+.approval-action.review { background:var(--amber); color:white; }
+
+/* AI CHAT */
+.chat-panel { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow-sm); }
+.chat-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.chat-avatar { width:28px; height:28px; border-radius:8px; background:var(--brand); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.chat-avatar svg { width:14px; height:14px; fill:white; }
+.chat-name { font-size:13px; font-weight:700; }
+.chat-status { font-size:11px; color:var(--green); font-weight:500; display:flex; align-items:center; gap:5px; }
+.chat-status::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block; animation:pulse 2s infinite; }
+.messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; }
+.msg { display:flex; gap:8px; align-items:flex-start; max-width:90%; }
+.msg.user { align-self:flex-end; flex-direction:row-reverse; }
+.msg-av { width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
+.msg.ai .msg-av { background:var(--brand); color:white; }
+.msg.user .msg-av { background:#E5E7EB; color:var(--text-secondary); }
+.msg-bubble { padding:10px 14px; border-radius:12px; font-size:13px; line-height:1.6; }
+.msg.ai .msg-bubble { background:#F3F4F6; color:var(--text); border-bottom-left-radius:3px; }
+.msg.user .msg-bubble { background:var(--brand); color:white; border-bottom-right-radius:3px; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; padding:10px 16px; border-top:1px solid var(--border); flex-shrink:0; }
+.chip { padding:6px 12px; border:1px solid var(--border); border-radius:20px; font-size:12px; color:var(--text-secondary); cursor:pointer; background:white; font-family:var(--font); transition:all 0.15s; }
+.chip:hover { border-color:var(--brand); color:var(--brand); background:var(--brand-light); }
+
+/* SUMMARY CARDS */
+.summary-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+.summary-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-sm); }
+.summary-val { font-size:28px; font-weight:800; letter-spacing:-1px; margin-bottom:2px; }
+.summary-lbl { font-size:11px; color:var(--text-muted); font-weight:500; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const { useState, useEffect, useRef } = React;
+
+// ── EXCEPTION MESSAGE DATA ──
+const EXCEPTIONS = [
+  {
+    id:'EXC-40912', type:'E', typeName:'Expedite',
+    item:'Hydraulic Control Line — 1/4" SS316', sku:'HCL-025-SS316',
+    po:'PO-2026-08841', supplier:'Sandvik Materials Technology',
+    plant:'Houston MFG', segment:'Manufacturing/Distribution',
+    currentDate:'2026-05-14', requestedDate:'2026-04-28',
+    qty:2400, uom:'meters', value:'$86,400',
+    reason:'Wellhead completion schedule moved up 16 days. Field ops requesting expedite to avoid rig standby costs (~$45K/day).',
+    aiAction:'approve',
+    aiReason:'Expedite justified. Rig standby costs ($45K/day × 16 days = $720K exposure) far exceed any expedite fees. Sandvik has confirmed 10-day expedite capability on this SKU at +8% premium ($6,912). Recommend approval with expedite PO amendment.',
+    confidence:94,
+    history:[
+      {event:'MRP generated requirement', date:'2026-03-01'},
+      {event:'PO issued to Sandvik', date:'2026-03-05'},
+      {event:'Original delivery confirmed', date:'2026-05-14'},
+      {event:'Field ops schedule change', date:'2026-04-09'},
+      {event:'Exception raised (Expedite)', date:'2026-04-09'},
+    ]
+  },
+  {
+    id:'EXC-40913', type:'D', typeName:'Defer',
+    item:'Casing Centralizer — Bow Spring 9-5/8"', sku:'CC-BS-958',
+    po:'PO-2026-09102', supplier:'Weatherford (Intercompany)',
+    plant:'Celle, Germany', segment:'Intercompany',
+    currentDate:'2026-04-20', requestedDate:'2026-06-15',
+    qty:500, uom:'units', value:'$37,500',
+    reason:'Drilling programme Phase 2 delayed by 8 weeks per client schedule update. Inventory carrying cost concern if received on original date.',
+    aiAction:'approve',
+    aiReason:'Defer recommended. Phase 2 drilling confirmed delayed. Receiving 500 centralizers 8 weeks early would add $4,200/month in warehousing costs and tie up working capital. Intercompany order — deferral has no supplier penalty. Update delivery schedule in JDE.',
+    confidence:97,
+    history:[
+      {event:'DRP requirement generated', date:'2026-02-10'},
+      {event:'Intercompany PO created', date:'2026-02-12'},
+      {event:'Celle production confirmed', date:'2026-04-20'},
+      {event:'Client schedule update received', date:'2026-04-08'},
+      {event:'Exception raised (Defer)', date:'2026-04-09'},
+    ]
+  },
+  {
+    id:'EXC-40914', type:'T', typeName:'Transfer',
+    item:'ESP Cable — 4AWG Round, 5kV', sku:'ESP-4R-5KV',
+    po:'PO-2026-07753', supplier:'NOV (National Oilwell Varco)',
+    plant:'Dubai Operations', segment:'Operations',
+    currentDate:'2026-04-25', requestedDate:'2026-04-25',
+    qty:8000, uom:'meters', value:'$192,000',
+    reason:'Dubai ops has surplus of 3,200m from cancelled well programme. Permian Basin has urgent requirement for 3,000m. Transfer eliminates new PO and saves 6-week lead time.',
+    aiAction:'review',
+    aiReason:'Transfer is viable but requires manual review. Dubai surplus confirmed (3,200m available). Permian requirement validated. However: (1) freight cost Dubai→Houston estimated $14,200, (2) cable was stored 4 months — recommend inspection certificate before transfer, (3) remaining 200m in Dubai falls below minimum reorder point. Flag for buyer review.',
+    confidence:78,
+    history:[
+      {event:'Dubai surplus identified', date:'2026-04-02'},
+      {event:'Permian Basin requirement raised', date:'2026-04-07'},
+      {event:'System match: surplus ↔ requirement', date:'2026-04-09'},
+      {event:'Exception raised (Transfer)', date:'2026-04-09'},
+    ]
+  },
+  {
+    id:'EXC-40915', type:'C', typeName:'Cancel',
+    item:'Liner Hanger — 7" Premium Thread', sku:'LH-7P-PREM',
+    po:'PO-2026-08200', supplier:'Hunting Energy Services',
+    plant:'Houston MFG', segment:'Manufacturing/Distribution',
+    currentDate:'2026-05-01', requestedDate:'N/A',
+    qty:12, uom:'units', value:'$216,000',
+    reason:'Well programme cancelled by operator (ConocoPhillips Eagle Ford). No alternative demand identified in 90-day horizon.',
+    aiAction:'review',
+    aiReason:'Cancellation likely justified but carries commercial risk. Hunting PO terms include 15% cancellation fee on custom-thread items ($32,400). Check: (1) Are any of the 12 units already in production? (2) Can standard-thread variant be redirected to stock? (3) 90-day demand forecast shows 8-unit requirement in Q3 — partial cancellation (cancel 4, defer 8) may be more economical. Recommend buyer negotiation with Hunting before full cancellation.',
+    confidence:72,
+    history:[
+      {event:'Well programme PO received', date:'2026-01-15'},
+      {event:'Hunting order placed', date:'2026-01-22'},
+      {event:'ConocoPhillips cancellation notice', date:'2026-04-07'},
+      {event:'Demand check: no 90-day match', date:'2026-04-09'},
+      {event:'Exception raised (Cancel)', date:'2026-04-09'},
+    ]
+  },
+  {
+    id:'EXC-40916', type:'E', typeName:'Expedite',
+    item:'Multiplex Control System — MCS-500', sku:'MCS-500-R2',
+    po:'PO-2026-09330', supplier:'Emerson Process Management',
+    plant:'Singapore Ops', segment:'Operations',
+    currentDate:'2026-06-01', requestedDate:'2026-05-10',
+    qty:2, uom:'units', value:'$340,000',
+    reason:'Offshore platform commissioning brought forward. Control systems on critical path — any delay triggers $120K/day vessel standby.',
+    aiAction:'approve',
+    aiReason:'Critical expedite. Vessel standby at $120K/day makes this highest-priority. Emerson Singapore has confirmed 22-day expedite possible with air freight ($18,500) vs sea. Total expedite cost ~$24,000 against $2.5M+ standby exposure. Auto-approve recommended.',
+    confidence:96,
+    history:[
+      {event:'Platform commissioning date moved', date:'2026-04-01'},
+      {event:'Critical path analysis flagged MCS', date:'2026-04-05'},
+      {event:'Emerson expedite feasibility confirmed', date:'2026-04-08'},
+      {event:'Exception raised (Expedite)', date:'2026-04-09'},
+    ]
+  },
+];
+
+// ── B/O TO OQ DATA ──
+const BACKORDERS = [
+  { id:'BO-88412', item:'Tubing Hanger — 4-1/2" 13Cr', sku:'TH-45-13CR', plant:'Houston MFG', source:'MRP', qty:24, uom:'units', priority:'High', demandDate:'2026-05-01', estValue:'$168,000', status:'ai-converted', aiNote:'Auto-converted to OQ-26-4401. Single-source supplier (Dril-Quip). Lead time 8 weeks aligns with demand.' },
+  { id:'BO-88413', item:'Completion Packer — 7" Retrievable', sku:'CP-7R-STD', plant:'Celle, Germany', source:'DRP', qty:36, uom:'units', priority:'High', demandDate:'2026-05-15', estValue:'$252,000', status:'ai-converted', aiNote:'Auto-converted to OQ-26-4402. Intercompany sourcing from Houston MFG. Standard item — no approval needed.' },
+  { id:'BO-88414', item:'Drill Bit — PDC 8-1/2" 5-blade', sku:'DB-PDC-85-5B', plant:'Dubai Operations', source:'MRP', qty:48, uom:'units', priority:'Medium', demandDate:'2026-06-01', estValue:'$384,000', status:'needs-review', aiNote:'Multiple suppliers available. Price variance >12% between quotes. Recommend buyer RFQ before OQ creation.' },
+  { id:'BO-88415', item:'Safety Valve — SCSSV 5-1/2"', sku:'SV-SCSSV-55', plant:'Houston MFG', source:'MRP', qty:8, uom:'units', priority:'Critical', demandDate:'2026-04-22', estValue:'$96,000', status:'ai-converted', aiNote:'Auto-converted to OQ-26-4403. Critical safety item — expedite flag set. Baker Hughes confirmed stock availability.' },
+  { id:'BO-88416', item:'Wireline Cable — 7/16" Mono', sku:'WC-716-MONO', plant:'Singapore Ops', source:'DRP', qty:15000, uom:'meters', priority:'Low', demandDate:'2026-07-01', estValue:'$45,000', status:'ai-converted', aiNote:'Auto-converted to OQ-26-4404. Consolidated with existing open OQ for Singapore. Bulk discount applied.' },
+  { id:'BO-88417', item:'Wellhead Assembly — 13-5/8" 10K', sku:'WH-1358-10K', plant:'Houston MFG', source:'MRP', qty:4, uom:'units', priority:'High', demandDate:'2026-05-20', estValue:'$520,000', status:'needs-review', aiNote:'High-value item exceeds auto-convert threshold ($500K). Custom spec detected — requires engineering review before OQ.' },
+  { id:'BO-88418', item:'Sucker Rod — 7/8" Grade D', sku:'SR-78-GRD', plant:'Celle, Germany', source:'DRP', qty:2000, uom:'units', priority:'Medium', demandDate:'2026-06-15', estValue:'$90,000', status:'ai-converted', aiNote:'Auto-converted to OQ-26-4405. Tenaris preferred supplier. Standard grade — no spec review needed.' },
+];
+
+// ── APPROVAL DATA ──
+const APPROVALS = [
+  { id:'OR-26-5501', requester:'Ahmed Al-Rashid', dept:'Dubai Operations', item:'Subsea Tree Assembly — 5" Vertical', value:'$1,240,000', goa:'VP Operations', priority:'High', aiDecision:'auto-approved', aiNote:'Within GOA limits for VP Operations. Standard catalogue item. Budget code validated against approved AFE. No exceptions detected.', confidence:98 },
+  { id:'OR-26-5502', requester:'Maria Santos', dept:'Permian Basin', item:'Coiled Tubing Unit — Rental 30-day', value:'$85,000', goa:'Regional Manager', priority:'Medium', aiDecision:'auto-approved', aiNote:'Rental within regional manager authority ($100K limit). Preferred vendor (C&J Energy). Rate matches MSA pricing. Auto-approved.', confidence:96 },
+  { id:'OR-26-5503', requester:'James Mitchell', dept:'Houston MFG', item:'CNC Lathe — Retrofit Package', value:'$320,000', goa:'VP Manufacturing', priority:'Medium', aiDecision:'flagged', aiNote:'CAPEX item requires additional sign-off. Budget code maps to 2026 CAPEX plan but remaining allocation is $290K (short by $30K). Routing to VP Manufacturing + CFO co-approval.', confidence:88 },
+  { id:'OR-26-5504', requester:'Li Wei Chen', dept:'Singapore Ops', item:'Drill Pipe — 5" S-135, Range 2', value:'$445,000', goa:'VP Supply Chain', priority:'High', aiDecision:'flagged', aiNote:'Price anomaly detected. Last purchase of same SKU was $380/joint (now quoted at $445/joint — 17% increase). Recommend price validation before approval. Supplier may be leveraging tight market.', confidence:82 },
+  { id:'OR-26-5505', requester:'Sarah Thompson', dept:'North Sea Ops', item:'BOP Stack — Annual Inspection', value:'$62,000', goa:'Regional Manager', priority:'Critical', aiDecision:'auto-approved', aiNote:'Regulatory-mandated inspection. Within GOA. Sole-source justified (OEM requirement). Auto-approved with compliance tag.', confidence:99 },
+  { id:'OR-26-5506', requester:'Carlos Gutierrez', dept:'Latin America', item:'Cementing Unit — Skid-Mounted', value:'$890,000', goa:'VP Operations + CFO', priority:'High', aiDecision:'flagged', aiNote:'Dual approval required. Similar unit available in idle fleet (Unit CU-034, Midland yard). Transfer cost $35K vs new purchase $890K. Recommend fleet check before approval.', confidence:91 },
+];
+
+// ── MAIN APP ──
+function App() {
+  const [page, setPage] = useState('cover');
+  const [selectedExc, setSelectedExc] = useState(0);
+  const [selectedBO, setSelectedBO] = useState(null);
+  const [processedItems, setProcessedItems] = useState({});
+
+  const handleAction = (id, action) => {
+    setProcessedItems(prev => ({...prev, [id]: action}));
+  };
+
+  return (
+    <div>
+      <div className="header">
+        <div className="logo">
+          <div className="logo-mark">
+            <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <span className="logo-name">Conquer AI</span>
+          <span className="logo-div"></span>
+          <span className="logo-product">Weatherford Procurement AI</span>
+        </div>
+        <div className="header-right">
+          <div className="nav-tabs">
+            <button className={`nav-tab ${page==='cover'?'active':''}`} onClick={()=>setPage('cover')}>Overview</button>
+            <button className={`nav-tab ${page==='bot'?'active':''}`} onClick={()=>setPage('bot')}>Exception BOT</button>
+            <button className={`nav-tab ${page==='boq'?'active':''}`} onClick={()=>setPage('boq')}>B/O → OQ</button>
+            <button className={`nav-tab ${page==='approvals'?'active':''}`} onClick={()=>setPage('approvals')}>Auto Approvals</button>
+          </div>
+          <div className="indicative-badge">
+            <span>⚡</span> Indicative Demo
+          </div>
+        </div>
+      </div>
+
+      {page === 'cover' && <CoverPage onNavigate={setPage} />}
+      {page === 'bot' && <ExceptionBotPage exceptions={EXCEPTIONS} selected={selectedExc} onSelect={setSelectedExc} processed={processedItems} onAction={handleAction} />}
+      {page === 'boq' && <BOtoOQPage backorders={BACKORDERS} processed={processedItems} onAction={handleAction} />}
+      {page === 'approvals' && <ApprovalsPage approvals={APPROVALS} processed={processedItems} onAction={handleAction} />}
+    </div>
+  );
+}
+
+// ── COVER PAGE ──
+function CoverPage({ onNavigate }) {
+  return (
+    <div className="page">
+      <div className="cover-hero">
+        <div>
+          <div className="cover-eyebrow">Weatherford × Conquer AI</div>
+          <h1 className="cover-title">Procurement AI<br/>for <span>Weatherford</span></h1>
+          <p className="cover-sub">Three AI-powered capabilities targeting the beginning and end of Weatherford's procurement pipeline — automating exception handling, backorder-to-OQ conversion, and order requisition approvals across Manufacturing, Operations, and Intercompany segments.</p>
+          <div className="cover-stats">
+            <div><div className="stat-val">T E D C</div><div className="stat-lbl">Exception Categories</div></div>
+            <div><div className="stat-val">3</div><div className="stat-lbl">AI Opportunity Areas</div></div>
+            <div><div className="stat-val">JDE</div><div className="stat-lbl">System Integration</div></div>
+          </div>
+        </div>
+        <div className="cover-visual">
+          <div style={{padding:'32px',width:'100%'}}>
+            <div style={{fontSize:'11px',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--brand)',marginBottom:'16px'}}>End-to-End Procurement Flow</div>
+            <div className="flow">
+              <div className="flow-node"><div className="flow-box ai-node"><div className="ai-badge">AI OPP 1</div><div className="flow-icon">📋</div><div className="flow-label">B/O → OQ</div><div className="flow-sub">Auto-convert</div></div></div>
+              <div className="flow-arrow brand">→</div>
+              <div className="flow-node"><div className="flow-box"><div className="flow-icon">🔍</div><div className="flow-label">OQ Processing</div><div className="flow-sub">Buyer RFQ</div></div></div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-node"><div className="flow-box"><div className="flow-icon">🔄</div><div className="flow-label">OQ → OR</div><div className="flow-sub">Conversion</div></div></div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-node"><div className="flow-box ai-node"><div className="ai-badge">AI OPP 2</div><div className="flow-icon">✅</div><div className="flow-label">Auto Approvals</div><div className="flow-sub">GOA-based</div></div></div>
+              <div className="flow-arrow brand">→</div>
+              <div className="flow-node"><div className="flow-box"><div className="flow-icon">📦</div><div className="flow-label">OR → PO</div><div className="flow-sub">Conversion</div></div></div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-node"><div className="flow-box"><div className="flow-icon">🚚</div><div className="flow-label">PO Dist.</div><div className="flow-sub">Supplier Ack</div></div></div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-node"><div className="flow-box ai-node"><div className="ai-badge">AI OPP 3</div><div className="flow-icon">🤖</div><div className="flow-label">Procurement BOT</div><div className="flow-sub">T, E, D, C</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="cover-features">
+        <div className="cover-feature" onClick={()=>onNavigate('bot')}>
+          <div className="feature-icon" style={{background:var('--red-bg')}}>🤖</div>
+          <div className="feature-title">Procurement BOT — Exception Messages</div>
+          <div className="feature-body">AI triages Transfer, Expedite, Defer, and Cancel exceptions. Analyses cost impact, supplier capacity, and demand forecasts. Recommends action with confidence scoring. Human approves or overrides.</div>
+          <div style={{marginTop:'12px',fontSize:'12px',fontWeight:600,color:'var(--brand)'}}>View demo →</div>
+        </div>
+        <div className="cover-feature" onClick={()=>onNavigate('boq')}>
+          <div className="feature-icon" style={{background:'var(--blue-bg)'}}>📋</div>
+          <div className="feature-title">B/O to OQ — Auto-Conversion</div>
+          <div className="feature-body">Backorders from MRP/DRP automatically converted to Order Quantities. AI validates supplier, checks pricing, consolidates where possible, and flags exceptions for human review.</div>
+          <div style={{marginTop:'12px',fontSize:'12px',fontWeight:600,color:'var(--brand)'}}>View demo →</div>
+        </div>
+        <div className="cover-feature" onClick={()=>onNavigate('approvals')}>
+          <div className="feature-icon" style={{background:'var(--green-bg)'}}>✅</div>
+          <div className="feature-title">Auto Approvals — GOA-Based Routing</div>
+          <div className="feature-body">Order Requisitions automatically approved when within Grant of Authority limits. AI validates budget codes, detects price anomalies, checks fleet availability, and flags exceptions requiring dual sign-off.</div>
+          <div style={{marginTop:'12px',fontSize:'12px',fontWeight:600,color:'var(--brand)'}}>View demo →</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function var_(name) { return `var(${name})`; }
+
+// ── EXCEPTION BOT PAGE ──
+function ExceptionBotPage({ exceptions, selected, onSelect, processed, onAction }) {
+  const exc = exceptions[selected];
+  const typeColors = { T:'#1D4ED8', E:'var(--red)', D:'var(--amber)', C:'var(--purple)' };
+
+  return (
+    <div className="page">
+      <div className="summary-strip">
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--text)'}}>{exceptions.length}</div><div className="summary-lbl">Open Exceptions</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--red)'}}>{exceptions.filter(e=>e.type==='E').length}</div><div className="summary-lbl">Expedite</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--amber)'}}>{exceptions.filter(e=>e.type==='D'||e.type==='T').length}</div><div className="summary-lbl">Defer / Transfer</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--purple)'}}>{exceptions.filter(e=>e.type==='C').length}</div><div className="summary-lbl">Cancel</div></div>
+      </div>
+      <div className="three-col">
+        {/* Queue */}
+        <div className="panel">
+          <div className="panel-header">
+            <span className="panel-title">Exception Queue</span>
+            <span className="panel-badge" style={{background:'var(--brand-light)',color:'var(--brand)'}}>{exceptions.length} open</span>
+          </div>
+          <div className="panel-body">
+            {exceptions.map((e,i) => (
+              <div key={e.id} className={`queue-item ${i===selected?'active':''}`} onClick={()=>onSelect(i)}>
+                <div className="queue-top">
+                  <span className="queue-id">{e.id}</span>
+                  <span className={`queue-type type-${e.type}`}>{e.typeName}</span>
+                </div>
+                <div className="queue-desc">{e.item}</div>
+                <div className="queue-meta">
+                  <span>{e.plant}</span>
+                  <span>{e.value}</span>
+                  {processed[e.id] && <span className="status-pill pill-green" style={{fontSize:'9px',padding:'1px 6px'}}>✓ {processed[e.id]}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Detail */}
+        <div className="panel">
+          <div className="panel-header">
+            <span className="panel-title">{exc.id} — {exc.typeName} Exception</span>
+            <span className={`queue-type type-${exc.type}`}>{exc.type}</span>
+          </div>
+          <div className="panel-body">
+            <div className="detail-section">
+              <div className="detail-label">Order Details</div>
+              <div className="detail-grid">
+                <div className="detail-field"><div className="detail-field-label">Item</div><div className="detail-field-value">{exc.item}</div></div>
+                <div className="detail-field"><div className="detail-field-label">SKU</div><div className="detail-field-value" style={{fontFamily:"'Courier New',monospace"}}>{exc.sku}</div></div>
+                <div className="detail-field"><div className="detail-field-label">PO</div><div className="detail-field-value">{exc.po}</div></div>
+                <div className="detail-field"><div className="detail-field-label">Supplier</div><div className="detail-field-value">{exc.supplier}</div></div>
+                <div className="detail-field"><div className="detail-field-label">Qty</div><div className="detail-field-value">{exc.qty.toLocaleString()} {exc.uom}</div></div>
+                <div className="detail-field"><div className="detail-field-label">Value</div><div className="detail-field-value">{exc.value}</div></div>
+                <div className="detail-field"><div className="detail-field-label">Current Date</div><div className="detail-field-value">{exc.currentDate}</div></div>
+                <div className="detail-field"><div className="detail-field-label">Requested Date</div><div className="detail-field-value">{exc.requestedDate}</div></div>
+              </div>
+            </div>
+            <div className="detail-section">
+              <div className="detail-label">Exception Reason</div>
+              <p style={{fontSize:'13px',color:'var(--text-secondary)',lineHeight:1.6}}>{exc.reason}</p>
+            </div>
+            <div className="detail-section">
+              <div className="detail-label">AI Recommendation</div>
+              <div className={`recommendation-card ${exc.aiAction}`}>
+                <div className="rec-header">
+                  <span className="rec-icon">{exc.aiAction==='approve'?'✅':exc.aiAction==='review'?'⚠️':'❌'}</span>
+                  <span className="rec-title">{exc.aiAction==='approve'?'Recommend: Approve':'Recommend: Buyer Review Required'}</span>
+                </div>
+                <div className="rec-body">{exc.aiReason}</div>
+                <div className="rec-confidence">
+                  <span style={{color:'var(--text-muted)'}}>Confidence:</span>
+                  <span style={{fontWeight:700,color:exc.confidence>=90?'var(--green)':'var(--amber)'}}>{exc.confidence}%</span>
+                  <div className="conf-bar"><div className={`conf-fill ${exc.confidence>=90?'high':'med'}`} style={{width:`${exc.confidence}%`}}></div></div>
+                </div>
+              </div>
+            </div>
+            <div className="detail-section">
+              <div className="detail-label">Event Timeline</div>
+              {exc.history.map((h,i) => (
+                <div key={i} style={{display:'flex',gap:'10px',alignItems:'flex-start',marginBottom:'8px'}}>
+                  <div style={{width:'6px',height:'6px',borderRadius:'50%',background:i===exc.history.length-1?'var(--brand)':'#D1D5DB',marginTop:'6px',flexShrink:0}}></div>
+                  <div>
+                    <div style={{fontSize:'12px',fontWeight:600,color:'var(--text)'}}>{h.event}</div>
+                    <div style={{fontSize:'11px',color:'var(--text-muted)'}}>{h.date}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {!processed[exc.id] && (
+            <div className="action-btns">
+              <button className="action-btn primary" onClick={()=>onAction(exc.id,'Approved')}>✓ Accept Recommendation</button>
+              <button className="action-btn secondary" onClick={()=>onAction(exc.id,'Overridden')}>Override</button>
+              <button className="action-btn secondary" onClick={()=>onAction(exc.id,'Escalated')}>Escalate</button>
+            </div>
+          )}
+          {processed[exc.id] && (
+            <div style={{padding:'14px 18px',background:'var(--green-bg)',borderTop:'1px solid rgba(16,185,129,0.2)',textAlign:'center'}}>
+              <span style={{fontSize:'13px',fontWeight:700,color:'var(--green)'}}>✓ {processed[exc.id]} — Action recorded</span>
+            </div>
+          )}
+        </div>
+
+        {/* AI Chat */}
+        <div className="chat-panel">
+          <div className="chat-header">
+            <div className="chat-avatar"><svg viewBox="0 0 24 24" width="14" height="14" fill="white"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+            <div>
+              <div className="chat-name">Procurement AI</div>
+              <div className="chat-status">Analysing {exc.id}</div>
+            </div>
+          </div>
+          <div className="messages">
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble">I've analysed <strong>{exc.id}</strong> ({exc.typeName}). {exc.aiAction==='approve' ? `This looks clear to approve — ${exc.confidence}% confidence.` : `This needs your review — there are factors that require human judgement.`} Want me to break down the cost impact?</div>
+            </div>
+            <div className="msg user">
+              <div className="msg-av">SK</div>
+              <div className="msg-bubble">What's the financial exposure if we don't act on this?</div>
+            </div>
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble">{exc.type==='E' ? `Delay exposure is significant. ${exc.id === 'EXC-40912' ? 'Rig standby at $45K/day for 16 days = $720K. Expedite premium is only $6,912 (8% on $86,400). ROI on the expedite is clear.' : 'Vessel standby at $120K/day. Every day of delay costs more than the entire expedite premium. This is time-critical.'}` : exc.type==='D' ? `Receiving early adds ~$4,200/month in carrying costs plus ties up working capital. Since this is intercompany, there's no cancellation penalty for deferral. Clean decision.` : exc.type==='T' ? `New PO would cost $192K and take 6 weeks. Transfer costs ~$14,200 in freight. Net saving: ~$177,800 plus 6 weeks of lead time. But the inspection question is real — 4 months of storage in Dubai conditions.` : `Cancellation fee is $32,400 (15% of $216K). But there might be a smarter play: partial cancel 4, defer 8 to Q3 demand. That reduces the fee and covers upcoming requirements.`}</div>
+            </div>
+          </div>
+          <div className="chips">
+            <span className="chip">Show supplier history</span>
+            <span className="chip">Compare alternatives</span>
+            <span className="chip">Check inventory</span>
+            <span className="chip">Cost breakdown</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── B/O TO OQ PAGE ──
+function BOtoOQPage({ backorders, processed, onAction }) {
+  const converted = backorders.filter(b=>b.status==='ai-converted').length;
+  const review = backorders.filter(b=>b.status==='needs-review').length;
+  const totalValue = backorders.reduce((s,b)=>s+parseInt(b.estValue.replace(/[^0-9]/g,'')),0);
+
+  return (
+    <div className="page">
+      <div className="summary-strip">
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--text)'}}>{backorders.length}</div><div className="summary-lbl">Backorders Today</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--green)'}}>{converted}</div><div className="summary-lbl">Auto-Converted to OQ</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--amber)'}}>{review}</div><div className="summary-lbl">Needs Buyer Review</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--brand)'}}>${(totalValue/1000000).toFixed(1)}M</div><div className="summary-lbl">Total Pipeline Value</div></div>
+      </div>
+
+      <div className="two-col" style={{gridTemplateColumns:'1fr 340px'}}>
+        <div className="panel">
+          <div className="panel-header">
+            <span className="panel-title">Backorder → OQ Processing Queue</span>
+            <div style={{display:'flex',gap:'6px'}}>
+              <span className="status-pill pill-green">✓ {converted} auto-converted</span>
+              <span className="status-pill pill-amber">⚠ {review} need review</span>
+            </div>
+          </div>
+          <div className="panel-body">
+            <table className="oq-table">
+              <thead>
+                <tr>
+                  <th>B/O ID</th>
+                  <th>Item</th>
+                  <th>Plant</th>
+                  <th>Source</th>
+                  <th>Qty</th>
+                  <th>Est. Value</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {backorders.map(b => (
+                  <tr key={b.id} className={b.status==='ai-converted'?'ai-row':''}>
+                    <td style={{fontFamily:"'Courier New',monospace",fontWeight:600,fontSize:'12px'}}>{b.id}</td>
+                    <td style={{fontSize:'12px',maxWidth:'180px'}}><div style={{fontWeight:600}}>{b.item}</div><div style={{color:'var(--text-muted)',fontSize:'11px'}}>{b.sku}</div></td>
+                    <td style={{fontSize:'12px'}}>{b.plant}</td>
+                    <td><span className={`status-pill ${b.source==='MRP'?'pill-blue':'pill-brand'}`}>{b.source}</span></td>
+                    <td style={{fontSize:'12px'}}>{b.qty.toLocaleString()} {b.uom}</td>
+                    <td style={{fontSize:'12px',fontWeight:600}}>{b.estValue}</td>
+                    <td><span className={`status-pill ${b.priority==='Critical'?'pill-red':b.priority==='High'?'pill-amber':b.priority==='Medium'?'pill-blue':'pill-green'}`}>{b.priority}</span></td>
+                    <td>
+                      {processed[b.id] ? (
+                        <span className="status-pill pill-green">✓ Done</span>
+                      ) : b.status==='ai-converted' ? (
+                        <span className="status-pill pill-green">✓ Auto-converted</span>
+                      ) : (
+                        <span className="status-pill pill-amber">⚠ Review</span>
+                      )}
+                    </td>
+                    <td>
+                      {b.status==='needs-review' && !processed[b.id] && (
+                        <button className="action-btn primary" style={{padding:'5px 12px',fontSize:'11px'}} onClick={()=>onAction(b.id,'Approved')}>Approve</button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* AI Panel */}
+        <div className="chat-panel">
+          <div className="chat-header">
+            <div className="chat-avatar"><svg viewBox="0 0 24 24" width="14" height="14" fill="white"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+            <div>
+              <div className="chat-name">Procurement AI</div>
+              <div className="chat-status">Processing backorders</div>
+            </div>
+          </div>
+          <div className="messages">
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble">I've processed <strong>{backorders.length} backorders</strong> from today's MRP/DRP run. <strong>{converted}</strong> were auto-converted to OQs — standard items, single-source suppliers, within value thresholds.</div>
+            </div>
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble"><strong>{review} items need your attention:</strong><br/><br/>• <strong>BO-88414</strong> (Drill Bits, $384K) — Multiple supplier quotes with 12%+ price variance. Recommend competitive RFQ.<br/><br/>• <strong>BO-88417</strong> (Wellhead Assembly, $520K) — Exceeds auto-convert value threshold and has custom specs. Needs engineering + buyer sign-off.</div>
+            </div>
+            <div className="msg user">
+              <div className="msg-av">SK</div>
+              <div className="msg-bubble">What did we consolidate today?</div>
+            </div>
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble">One consolidation: <strong>BO-88416</strong> (Wireline Cable for Singapore) was merged with an existing open OQ. Bulk discount applied — saved approximately $2,700 vs. separate order. The rest were unique requirements.</div>
+            </div>
+          </div>
+          <div className="chips">
+            <span className="chip">Show consolidations</span>
+            <span className="chip">Supplier breakdown</span>
+            <span className="chip">Value by plant</span>
+            <span className="chip">Override threshold</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── AUTO APPROVALS PAGE ──
+function ApprovalsPage({ approvals, processed, onAction }) {
+  const auto = approvals.filter(a=>a.aiDecision==='auto-approved').length;
+  const flagged = approvals.filter(a=>a.aiDecision==='flagged').length;
+  const totalValue = approvals.reduce((s,a)=>s+parseInt(a.value.replace(/[^0-9]/g,'')),0);
+
+  return (
+    <div className="page">
+      <div className="summary-strip">
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--text)'}}>{approvals.length}</div><div className="summary-lbl">Requisitions Today</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--green)'}}>{auto}</div><div className="summary-lbl">Auto-Approved</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--amber)'}}>{flagged}</div><div className="summary-lbl">Flagged for Review</div></div>
+        <div className="summary-card"><div className="summary-val" style={{color:'var(--brand)'}}>${(totalValue/1000000).toFixed(1)}M</div><div className="summary-lbl">Total Value</div></div>
+      </div>
+
+      <div className="two-col" style={{gridTemplateColumns:'1fr 340px'}}>
+        <div className="panel">
+          <div className="panel-header">
+            <span className="panel-title">Order Requisition Approvals</span>
+          </div>
+          <div className="panel-body">
+            <div className="approval-grid">
+              {approvals.map(a => (
+                <div key={a.id} className={`approval-card ${a.aiDecision==='flagged'?'flagged':'auto'}`}>
+                  <div className="approval-top">
+                    <div>
+                      <div className="approval-or">{a.id}</div>
+                      <div style={{fontSize:'12px',color:'var(--text-dim)',marginTop:'2px'}}>{a.requester} · {a.dept}</div>
+                    </div>
+                    <div className="approval-amount">{a.value}</div>
+                  </div>
+                  <div className="approval-details">
+                    <strong>{a.item}</strong><br/>
+                    GOA: {a.goa} · Priority: {a.priority}
+                  </div>
+                  <div style={{fontSize:'12px',color:'var(--text-secondary)',lineHeight:1.5,marginBottom:'12px',padding:'10px',background:'#F9FAFB',borderRadius:'6px'}}>
+                    <span style={{fontSize:'10px',fontWeight:700,color:a.aiDecision==='auto-approved'?'var(--green)':'var(--amber)',textTransform:'uppercase',letterSpacing:'0.05em'}}>AI: </span>
+                    {a.aiNote}
+                  </div>
+                  <div className="approval-footer">
+                    <div className="rec-confidence" style={{margin:0}}>
+                      <span style={{color:'var(--text-muted)',fontSize:'11px'}}>Confidence:</span>
+                      <span style={{fontWeight:700,fontSize:'12px',color:a.confidence>=90?'var(--green)':'var(--amber)'}}>{a.confidence}%</span>
+                    </div>
+                    {processed[a.id] ? (
+                      <span className="status-pill pill-green">✓ Done</span>
+                    ) : a.aiDecision==='auto-approved' ? (
+                      <span className="status-pill pill-green" style={{fontSize:'11px'}}>✓ Auto-approved</span>
+                    ) : (
+                      <div style={{display:'flex',gap:'6px'}}>
+                        <button className="approval-action approve" onClick={()=>onAction(a.id,'Approved')}>Approve</button>
+                        <button className="approval-action review" onClick={()=>onAction(a.id,'Returned')}>Return</button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* AI Panel */}
+        <div className="chat-panel">
+          <div className="chat-header">
+            <div className="chat-avatar"><svg viewBox="0 0 24 24" width="14" height="14" fill="white"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+            <div>
+              <div className="chat-name">Procurement AI</div>
+              <div className="chat-status">Monitoring approvals</div>
+            </div>
+          </div>
+          <div className="messages">
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble">Today's batch: <strong>{approvals.length} requisitions</strong> totalling <strong>${(totalValue/1000000).toFixed(1)}M</strong>. I auto-approved <strong>{auto}</strong> that were within GOA limits with no anomalies. <strong>{flagged} need your review.</strong></div>
+            </div>
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble"><strong>Key flags:</strong><br/><br/>🔴 <strong>OR-26-5503</strong> — CNC lathe retrofit is $30K over remaining CAPEX budget. Needs CFO co-sign.<br/><br/>🟡 <strong>OR-26-5504</strong> — Drill pipe price jumped 17% vs last purchase. Possible market leverage by supplier.<br/><br/>🟡 <strong>OR-26-5506</strong> — $890K cementing unit but there's an idle one in the Midland yard. Transfer would save $855K.</div>
+            </div>
+            <div className="msg user">
+              <div className="msg-av">SK</div>
+              <div className="msg-bubble">That Midland unit — is it operational?</div>
+            </div>
+            <div className="msg ai">
+              <div className="msg-av">AI</div>
+              <div className="msg-bubble">Unit CU-034 last operated 3 months ago on the Permian project. Maintenance records show it passed last inspection. Transfer + recommissioning estimated at $35K. That's a <strong>96% cost reduction</strong> vs new purchase. I'd recommend routing to fleet management for confirmation before approving the new PO.</div>
+            </div>
+          </div>
+          <div className="chips">
+            <span className="chip">Budget utilisation</span>
+            <span className="chip">Price anomalies</span>
+            <span className="chip">Fleet availability</span>
+            <span className="chip">Approval trends</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+</body>
+</html>
