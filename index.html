@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weatherford — Engagement Kick-Off Briefing</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brand:   #515FFC;
+  --green:   #059669;
+  --red:     #DC2626;
+  --amber:   #D97706;
+  --purple:  #7C3AED;
+  --teal:    #0D9488;
+  --text-1:  #111111;
+  --text-2:  #555555;
+  --text-3:  #999999;
+  --border:  #E5E5E5;
+  --bg-alt:  #F7F7F6;
+  --nav-h:   48px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-1);
+  background: #fff;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  gap: 0;
+}
+.nav-logo { display: flex; align-items: center; gap: 7px; margin-right: 28px; flex-shrink: 0; text-decoration: none; }
+.nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+.nav-logo-text { font-size: 13px; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
+.nav-divider { width: 1px; height: 20px; background: var(--border); margin: 0 20px; flex-shrink: 0; }
+.nav-links { display: flex; align-items: center; gap: 0; flex: 1; overflow-x: auto; }
+.nav-link { font-size: 13px; font-weight: 500; color: var(--text-2); text-decoration: none; padding: 0 14px; height: var(--nav-h); display: flex; align-items: center; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.1s, border-color 0.1s; }
+.nav-link:hover { color: var(--text-1); }
+.nav-link.active { color: var(--text-1); border-bottom-color: var(--brand); font-weight: 600; }
+.nav-internal { margin-left: auto; flex-shrink: 0; background: var(--text-1); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 3px; }
+
+/* ── LAYOUT ── */
+.content-wrap { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+.section { padding: 72px 0 80px; border-bottom: 1px solid var(--border); }
+.section.alt { background: var(--bg-alt); }
+.section.dark { background: var(--text-1); color: #fff; }
+
+/* ── TYPOGRAPHY ── */
+.section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; font-family: 'Courier New', monospace; }
+.section.dark .section-eyebrow { color: #6EE7B7; }
+.section-headline { font-size: 48px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: var(--text-1); margin-bottom: 12px; }
+.section.dark .section-headline { color: #fff; }
+.section-sub { font-size: 16px; color: var(--text-2); margin-bottom: 40px; max-width: 640px; }
+.section.dark .section-sub { color: rgba(255,255,255,0.55); }
+
+/* ── HERO ── */
+.hero { padding: 56px 0 64px; border-bottom: 1px solid var(--border); }
+.hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); font-family: 'Courier New', monospace; margin-bottom: 20px; }
+.hero-headline { font-size: 56px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; color: var(--text-1); margin-bottom: 14px; }
+.hero-sub { font-size: 18px; color: var(--text-2); max-width: 560px; }
+
+/* ── INFO CARDS ── */
+.info-card { border: 1px solid var(--border); border-radius: 6px; padding: 24px 28px; margin-bottom: 12px; background: #fff; }
+.info-card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); font-family: 'Courier New', monospace; margin-bottom: 12px; }
+.info-card-label.red { color: var(--red); }
+.info-card-label.amber { color: var(--amber); }
+.info-card-label.brand { color: var(--brand); }
+.info-card-label.green { color: var(--green); }
+.info-card p { font-size: 15px; color: var(--text-1); margin-bottom: 10px; }
+.info-card p:last-child { margin-bottom: 0; }
+.info-card p em { font-style: italic; color: var(--green); }
+
+/* ── HOOK / WATCH-OUT BLOCKS ── */
+.hook-block { border: 1px solid var(--border); border-radius: 6px; padding: 18px 22px; margin-bottom: 8px; font-size: 14px; line-height: 1.65; background: #fff; }
+.hook-block .hook-label { font-weight: 800; color: var(--text-1); }
+.hook-block.warn { border-left: 3px solid var(--amber); }
+.hook-block.warn .hook-label { color: var(--amber); }
+.hook-block.danger { border-left: 3px solid var(--red); }
+.hook-block.danger .hook-label { color: var(--red); }
+.hook-block.good { border-left: 3px solid var(--green); }
+.hook-block.good .hook-label { color: var(--green); }
+.hook-block.info { border-left: 3px solid var(--brand); }
+.hook-block.info .hook-label { color: var(--brand); }
+
+/* ── ACCORDION ── */
+.accordion { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
+.accordion-trigger { display: flex; align-items: center; gap: 12px; padding: 14px 20px; cursor: pointer; background: #fff; border: none; width: 100%; text-align: left; font-size: 14px; font-weight: 600; color: var(--text-1); transition: background 0.1s; }
+.accordion-trigger:hover { background: var(--bg-alt); }
+.accordion-arrow { font-size: 10px; color: var(--text-3); transition: transform 0.15s; flex-shrink: 0; }
+.accordion-arrow.open { transform: rotate(90deg); }
+.acc-type { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; flex-shrink: 0; font-family: 'Courier New', monospace; }
+.acc-type.ask      { background: #ECFDF5; color: var(--green); }
+.acc-type.show     { background: #EEF2FF; color: var(--brand); }
+.acc-type.deep     { background: #F5F3FF; color: var(--purple); }
+.acc-type.critical { background: #FEF2F2; color: var(--red); }
+.acc-type.docs     { background: #F3F4F6; color: #374151; }
+.acc-type.eng      { background: #EEF2FF; color: var(--brand); }
+.acc-type.com      { background: #FFFBEB; color: var(--amber); }
+.accordion-body { padding: 20px 24px; border-top: 1px solid var(--border); background: #fff; display: none; font-size: 14px; color: var(--text-2); line-height: 1.7; }
+.accordion-body.open { display: block; }
+.accordion-body p { margin-bottom: 10px; }
+.accordion-body p:last-child { margin-bottom: 0; }
+.accordion-body strong { color: var(--text-1); font-weight: 600; }
+
+/* ── PEOPLE GRID ── */
+.people-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.people-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+.person-card { border: 1px solid var(--border); border-radius: 6px; padding: 20px; background: #fff; }
+.person-name { font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 3px; }
+.person-role { font-size: 12px; color: var(--teal); margin-bottom: 12px; font-weight: 500; }
+.person-role.red { color: var(--red); }
+.person-role.amber { color: var(--amber); }
+.person-role.brand { color: var(--brand); }
+.person-body { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+/* ── STAT STRIP ── */
+.stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+.stat-cell { padding: 20px 18px; border-right: 1px solid var(--border); text-align: center; }
+.stat-cell:last-child { border-right: none; }
+.stat-num { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; color: var(--text-1); font-family: 'Courier New', monospace; margin-bottom: 4px; }
+.stat-num.green { color: var(--green); }
+.stat-num.amber { color: var(--amber); }
+.stat-num.brand { color: var(--brand); }
+.stat-lbl { font-size: 11px; color: var(--text-2); font-weight: 500; }
+
+/* ── OPPORTUNITY CARDS ── */
+.opp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+.opp-card { border: 1px solid var(--border); border-radius: 6px; padding: 24px 28px; background: #fff; }
+.opp-card-num { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); font-family: 'Courier New', monospace; margin-bottom: 8px; }
+.opp-card-title { font-size: 16px; font-weight: 700; color: var(--text-1); margin-bottom: 8px; }
+.opp-card-body { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+.opp-card-body strong { color: var(--text-1); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 28px; margin-bottom: 24px; }
+.timeline::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+.timeline-item { position: relative; margin-bottom: 20px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-dot { position: absolute; left: -28px; top: 6px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border); background: #fff; }
+.timeline-dot.green { border-color: var(--green); background: var(--green); }
+.timeline-dot.brand { border-color: var(--brand); background: var(--brand); }
+.timeline-dot.amber { border-color: var(--amber); background: var(--amber); }
+.timeline-date { font-size: 11px; font-weight: 700; color: var(--text-3); font-family: 'Courier New', monospace; letter-spacing: 0.05em; margin-bottom: 2px; }
+.timeline-title { font-size: 14px; font-weight: 700; color: var(--text-1); margin-bottom: 2px; }
+.timeline-body { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+/* ── BLOCKQUOTE ── */
+blockquote { border-left: 3px solid var(--brand); padding: 12px 20px; margin: 16px 0; background: #FAFAFA; font-size: 14px; color: var(--text-2); font-style: italic; border-radius: 0 6px 6px 0; }
+blockquote cite { display: block; margin-top: 8px; font-size: 12px; font-style: normal; color: var(--text-3); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .hero-headline { font-size: 36px; }
+  .section-headline { font-size: 32px; }
+  .people-grid { grid-template-columns: 1fr; }
+  .opp-grid { grid-template-columns: 1fr; }
+  .stat-strip { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="nav-logo-dot"></span>
+    <span class="nav-logo-text">Conquer AI</span>
+  </a>
+  <span class="nav-divider"></span>
+  <div class="nav-links">
+    <a class="nav-link" href="#kickoff">Kick-Off Context</a>
+    <a class="nav-link" href="#journey">Journey So Far</a>
+    <a class="nav-link" href="#org">Weatherford Context</a>
+    <a class="nav-link" href="#contacts">Key Contacts</a>
+    <a class="nav-link" href="#usecase">The Use Case</a>
+    <a class="nav-link" href="#approach">Our Approach</a>
+    <a class="nav-link" href="#risks">Risks & Watch Points</a>
+  </div>
+  <span class="nav-internal">Internal</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="content-wrap">
+    <div class="hero-eyebrow">Weatherford · Engagement Kick-Off Brief · 9 April 2026</div>
+    <h1 class="hero-headline">Procurement AI.<br>The door is open —<br>time to walk through.</h1>
+    <p class="hero-sub">Three months of relationship-building, a strong internal champion, and a clearly scoped use case. Today's kick-off moves Weatherford from discovery into delivery.</p>
+  </div>
+</div>
+
+<!-- SECTION: KICK-OFF CONTEXT -->
+<div id="kickoff" class="section">
+<div class="content-wrap">
+
+  <div class="section-eyebrow">Kick-Off Context</div>
+  <h2 class="section-headline">What this meeting is<br>and what it isn't.</h2>
+  <p class="section-sub">This is not a first meeting. We're three calls deep with Weatherford, vendor onboarding is in motion, and Sarah Karthigan has personally championed Conquer into the procurement team. Today is the formal engagement kick-off.</p>
+
+  <div class="stat-strip">
+    <div class="stat-cell">
+      <div class="stat-num brand">WFT</div>
+      <div class="stat-lbl">NASDAQ: Weatherford</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">$5.5B+</div>
+      <div class="stat-lbl">Annual Revenue</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">~18,000</div>
+      <div class="stat-lbl">Employees (75 countries)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num green">4 Calls</div>
+      <div class="stat-lbl">Meetings to date</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-card-label">Meeting objective</div>
+    <p>Formally kick off the Conquer AI engagement with Weatherford's procurement team. Establish working relationships with the new stakeholders (Amiee Marcel, Todd Newell, Sudharshana Jagannathan), confirm scope and next steps for the procurement AI discovery, and align on how we'll work together.</p>
+  </div>
+
+  <div class="hook-block good">
+    <span class="hook-label">Why this matters: </span>Sarah Karthigan has personally vouched for Conquer and brought us into her procurement team. She told us directly: "I will be very, very protective of that, and I'll absolutely help you guys throughout the journey so that you are set up for success." We have an internal champion who has staked her credibility on us.
+  </div>
+
+  <div class="hook-block info">
+    <span class="hook-label">Commercial model agreed: </span>Discovery is free. Delivery is at risk — our payment is tied to successful completion, not upfront fees. This has already been discussed and accepted. Today is about getting into the work, not negotiating terms.
+  </div>
+
+</div>
+</div>
+
+<!-- SECTION: JOURNEY SO FAR -->
+<div id="journey" class="section alt">
+<div class="content-wrap">
+
+  <div class="section-eyebrow">Journey So Far</div>
+  <h2 class="section-headline">Three months.<br>Steady momentum.</h2>
+  <p class="section-sub">From cold intro to engagement kick-off in under 10 weeks of active engagement. Here's how we got here.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot green"></div>
+      <div class="timeline-date">5 Feb 2026</div>
+      <div class="timeline-title">Introduction: Conquer AI & Weatherford</div>
+      <div class="timeline-body">First meeting with senior Weatherford leadership — Girish Saligram, Kishore Sundararajan, Chelly Joneswilliams, and Sarah Karthigan. Conquer presented capabilities, at-risk delivery model, and phased approach. Weatherford agreed to debrief internally and come back with specific use cases. Sentiment: positive.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot green"></div>
+      <div class="timeline-date">13 Feb 2026</div>
+      <div class="timeline-title">Weatherford x Conquer / Follow Up</div>
+      <div class="timeline-body">Working session to explore identified use cases in more detail. Daniel Lima sent the follow-up email capturing next steps. Sarah committed to going away to frame the procurement opportunity.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot green"></div>
+      <div class="timeline-date">5 Mar 2026</div>
+      <div class="timeline-title">Weatherford x Conquer / Use Case Deep Dive</div>
+      <div class="timeline-body">The breakthrough meeting. Sarah presented a detailed procurement workflow diagram with specific AI opportunity areas mapped across three business segments. Introduced Wahid Chowdhury. Agreed to start with an MVP targeting one "orange box" opportunity. Sarah initiated vendor onboarding the same day.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot amber"></div>
+      <div class="timeline-date">6 Mar – 27 Mar 2026</div>
+      <div class="timeline-title">Vendor Onboarding (RR #2455959)</div>
+      <div class="timeline-body">Trish Tosczak in Supplier Relations worked the portal onboarding for Conquer. Hit a delay when the Category Manager wanted to hold off until the engagement was more concrete. Sarah escalated to Angie Manahan on 27 Mar to get the routing reactivated. James Mayo is the Conquer contact on the portal side.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot brand"></div>
+      <div class="timeline-date">9 Apr 2026 — Today</div>
+      <div class="timeline-title">Engagement Kick-Off</div>
+      <div class="timeline-body">Formal kick-off with the procurement team. New stakeholders joining: Amiee Marcel, Todd Newell, and Sudharshana Jagannathan. Sarah organised the meeting. This is where discovery begins.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SECTION: WEATHERFORD CONTEXT -->
+<div id="org" class="section">
+<div class="content-wrap">
+
+  <div class="section-eyebrow">Organisation Context</div>
+  <h2 class="section-headline">Global oilfield services.<br>Mid-transformation.</h2>
+  <p class="section-sub">Weatherford is a major NASDAQ-listed oilfield services company. They're in the middle of multiple transformation initiatives — and Sarah's AI team is deliberately threading AI through the gaps rather than reimagining from scratch.</p>
+
+  <div class="info-card">
+    <div class="info-card-label">What Weatherford does</div>
+    <p>Weatherford International provides equipment and services for drilling, evaluation, completion, production, and intervention across the full oil and gas lifecycle. Headquartered in Houston, operating in approximately 75 countries with ~18,000 employees. NASDAQ-listed (WFT), $5.5B+ annual revenue.</p>
+  </div>
+
+  <div class="info-card">
+    <div class="info-card-label brand">Transformation landscape</div>
+    <p><strong>TCS Shared Services:</strong> Weatherford is actively outsourcing/offshoring activities to TCS (Tata Consultancy Services) as a low-cost managed service provider. Some procurement activities are already being moved from high-cost to low-cost locations.</p>
+    <p><strong>"Impact 90" Programmes:</strong> Procurement simplification initiatives running across inventory and expense categories — existing transformation work that AI must complement, not conflict with.</p>
+    <p><strong>Sarah's positioning:</strong> She is being deliberate about not "barging in and reimagining how they do business." There's no appetite for that. AI is being positioned to fill gaps around existing initiatives.</p>
+  </div>
+
+  <div class="hook-block warn">
+    <span class="hook-label">Critical context — Don't reimagine: </span>Both Sarah and Wahid explicitly cautioned against trying to reimagine the whole procurement process. Wahid said it directly: "Be cautious of that." The mandate is MVP-first, targeting one specific opportunity area, building trust, then expanding. Respect this boundary.
+  </div>
+
+  <blockquote>
+    "It doesn't matter where you turn these days, everybody is doing some sort of transformation activity. There's just all this work that is already in flux and so I'm just being very mindful and respectful of that — not kind of barging in and saying, OK, we're gonna just reimagine how you do business."
+    <cite>— Sarah Karthigan, Use Case meeting, 5 Mar 2026</cite>
+  </blockquote>
+
+</div>
+</div>
+
+<!-- SECTION: KEY CONTACTS -->
+<div id="contacts" class="section alt">
+<div class="content-wrap">
+
+  <div class="section-eyebrow">Key Contacts</div>
+  <h2 class="section-headline">Who's in the room<br>— and who matters.</h2>
+  <p class="section-sub">Today's call brings in three new Weatherford faces alongside Sarah. Understanding who's who is essential for making the right first impression.</p>
+
+  <div class="people-grid" style="margin-bottom:16px;">
+    <div class="person-card">
+      <div class="person-name">Sarah Karthigan</div>
+      <div class="person-role">AI Programme Lead · Internal Champion</div>
+      <div class="person-body">The primary relationship and internal sponsor. Sarah identified the procurement use case, presented the detailed workflow diagram, initiated vendor onboarding, and personally brought Conquer into the procurement team. Previously at <strong>Chevron</strong>. She's been on all four meetings and organised today's kick-off. <strong>She has staked her credibility on us delivering.</strong></div>
+    </div>
+    <div class="person-card">
+      <div class="person-name">Amiee Marcel</div>
+      <div class="person-role brand">New — On today's kick-off</div>
+      <div class="person-body">First appearance in a Conquer meeting. Likely a procurement team member or SME that Sarah is bringing in for the operational engagement. <strong>Key person to build rapport with today</strong> — she may be our primary day-to-day contact during discovery.</div>
+    </div>
+    <div class="person-card">
+      <div class="person-name">Todd Newell</div>
+      <div class="person-role brand">New — On today's kick-off</div>
+      <div class="person-body">First appearance. Another new stakeholder Sarah has brought to the table. Procurement team member or adjacent function. Understand his role and how he connects to the workflow Sarah mapped out.</div>
+    </div>
+  </div>
+
+  <div class="people-grid" style="margin-bottom:16px;">
+    <div class="person-card">
+      <div class="person-name">Sudharshana Jagannathan</div>
+      <div class="person-role brand">New — On today's kick-off</div>
+      <div class="person-body">First appearance. Third new stakeholder. May be technical or operational. Important to understand her specific role in the procurement workflow and where she sits relative to the AI opportunity areas.</div>
+    </div>
+    <div class="person-card">
+      <div class="person-name">Wahid Chowdhury</div>
+      <div class="person-role">Portfolio/Product Mgmt · AI Governance</div>
+      <div class="person-body">Joined Sarah's team ~1.5 months before the Mar 5 meeting. Previously worked with Sarah at <strong>Chevron</strong>. Covers portfolio management, product management, value realisation, AI governance, and policy. <strong>Not on today's invite</strong> but an important stakeholder — he's the one who cautioned against reimagining the whole process.</div>
+    </div>
+    <div class="person-card">
+      <div class="person-name">Conquer Side</div>
+      <div class="person-role green">Tom Buckley · David Carter</div>
+      <div class="person-body"><strong>Tom Buckley</strong> — on the invite, needs to accept. <strong>David Carter</strong> — accepted, designated as primary Conquer contact for Weatherford's procurement engagement. David has been leading the commercial relationship and vendor onboarding coordination.</div>
+    </div>
+  </div>
+
+  <div class="hook-block good">
+    <span class="hook-label">Strategic hook — First impressions: </span>Amiee, Todd, and Sudharshana haven't met us before. They've only heard about Conquer from Sarah. Today needs to validate Sarah's recommendation. Be sharp, be fast, show genuine curiosity about their procurement workflows. Don't oversell — let Sarah champion us in the room.
+  </div>
+
+  <div class="hook-block info">
+    <span class="hook-label">Let Sarah lead: </span>She organised this meeting and she's bringing her team to us. Follow her lead on framing — she knows the internal politics, the sensitivities, and what language lands with her procurement colleagues. Support, don't override.
+  </div>
+
+</div>
+</div>
+
+<!-- SECTION: THE USE CASE -->
+<div id="usecase" class="section">
+<div class="content-wrap">
+
+  <div class="section-eyebrow">The Use Case</div>
+  <h2 class="section-headline">End-to-end procurement.<br>Three AI entry points.</h2>
+  <p class="section-sub">Sarah mapped the entire procurement workflow and identified specific AI opportunity areas. The goal is to pick one, build an MVP, prove value, then expand.</p>
+
+  <div class="info-card">
+    <div class="info-card-label">Procurement workflow overview</div>
+    <p>The end-to-end flow runs: <strong>OQ Creation</strong> (via JDE or MRP/DRP) → <strong>OQ Processing</strong> (Buyer RFQ & supplier selection) → <strong>OQ to OR Conversion</strong> → <strong>OR Approval</strong> → <strong>OR to PO Conversion</strong> → <strong>PO Distribution & Supplier Acknowledgement</strong> → <strong>Buyer/Supplier Date Management</strong> → <strong>Order Execution</strong>.</p>
+    <p>The workflow spans three business segments: <strong>Intercompany</strong>, <strong>Operations</strong>, and <strong>Manufacturing/Distribution/Operation MTS</strong> — each with different levels of TCS shared services coverage.</p>
+  </div>
+
+  <div class="opp-grid">
+    <div class="opp-card">
+      <div class="opp-card-num">AI Opportunity 01 — Beginning of Pipeline</div>
+      <div class="opp-card-title">Process B/O to OQ</div>
+      <div class="opp-card-body">Automating the processing of backorders into order quantities. This sits at the very start of the procurement pipeline and was identified as an "orange box" opportunity in Sarah's workflow diagram. <strong>Primarily in the Manufacturing/Distribution segment.</strong></div>
+    </div>
+    <div class="opp-card">
+      <div class="opp-card-num">AI Opportunity 02 — Beginning of Pipeline</div>
+      <div class="opp-card-title">OQ Processing Automation</div>
+      <div class="opp-card-body">Buyer RFQ and supplier selection — currently manual, labour-intensive work. Sarah's team realised that while the procurement bot (Opp 03) was the initial request, the beginning of the pipeline had more impactful opportunities. <strong>This emerged from the deeper analysis.</strong></div>
+    </div>
+    <div class="opp-card">
+      <div class="opp-card-num">AI Opportunity 03 — End of Pipeline</div>
+      <div class="opp-card-title">Procurement BOT / Exception Messages</div>
+      <div class="opp-card-body">The original request from the procurement team. Handling exception messages across categories: <strong>T (Transfer), E (Expedite), D (Defer), C (Cancel)</strong>. Sits at the end of the pipeline. This was the starting point that led Sarah to map the full workflow and identify the upstream opportunities.</div>
+    </div>
+    <div class="opp-card">
+      <div class="opp-card-num">Pipeline — Not yet ready</div>
+      <div class="opp-card-title">Commercial Bids & Tenders</div>
+      <div class="opp-card-body">A second use case involving how the commercial team processes bids and tenders. <strong>Still being framed internally</strong> — not ready for engagement yet. Monitor and be ready when it reaches engagement-ready status. This is the expansion play.</div>
+    </div>
+  </div>
+
+  <div class="hook-block good">
+    <span class="hook-label">MVP-first: </span>The agreed approach is to take one of the three orange-box opportunities, build a small MVP, prove value, and earn trust. Then expand to the bigger-impact areas. Don't try to boil the ocean — Wahid was explicit about this.
+  </div>
+
+  <blockquote>
+    "I wanna reiterate the fact — something Sarah said — is not reimagining the whole process. Let's say if we were to target maybe an MVP for one of those orange boxes, from a timeline perspective, what are we looking like?"
+    <cite>— Wahid Chowdhury, Use Case meeting, 5 Mar 2026</cite>
+  </blockquote>
+
+  <blockquote>
+    "I'd rather just take something small, create an MVP, and just start to develop trust. You know, and then we can go after some of the bigger impact things."
+    <cite>— Conquer response, Use Case meeting, 5 Mar 2026</cite>
+  </blockquote>
+
+</div>
+</div>
+
+<!-- SECTION: OUR APPROACH -->
+<div id="approach" class="section alt">
+<div class="content-wrap">
+
+  <div class="section-eyebrow">Our Approach</div>
+  <h2 class="section-headline">Discovery first.<br>Earn the right to build.</h2>
+  <p class="section-sub">Today's kick-off should establish the working rhythm and get us into the procurement SMEs' world. Don't pitch — learn.</p>
+
+  <div class="info-card">
+    <div class="info-card-label">Today's meeting goals</div>
+    <p><strong>1. Introductions:</strong> Build rapport with Amiee, Todd, and Sudharshana. Understand their roles in the procurement workflow.</p>
+    <p><strong>2. Scope confirmation:</strong> Confirm which AI opportunity area we're starting with and why. Get buy-in from the new stakeholders.</p>
+    <p><strong>3. Discovery logistics:</strong> Agree on how discovery sessions will work — who we'll talk to, what access we need, cadence of check-ins.</p>
+    <p><strong>4. Quick wins:</strong> Identify if there's anything we can show or demonstrate early to build confidence with the new faces.</p>
+  </div>
+
+  <div class="info-card">
+    <div class="info-card-label brand">Delivery model reminder</div>
+    <p><strong>Phase 1:</strong> Build and test in Conquer's environment with dummy/mock data. No dependencies on Weatherford's systems. Fast iteration.</p>
+    <p><strong>Phase 2:</strong> Deploy into Weatherford's cloud environment and connect to live systems (JDE, MRP/DRP, etc.).</p>
+    <p>This two-phase approach was presented and well-received in the intro meeting. It de-risks the engagement for Weatherford and lets us move fast without waiting for IT access.</p>
+  </div>
+
+  <div class="accordion" style="margin-top:16px;">
+    <button class="accordion-trigger" onclick="toggleAcc(this)">
+      <span class="accordion-arrow">▶</span>
+      <span class="acc-type ask">ASK</span>
+      Key questions for the new stakeholders
+    </button>
+    <div class="accordion-body">
+      <p><strong>For Amiee / Todd / Sudharshana:</strong></p>
+      <p>— What's your specific role in the procurement workflow Sarah mapped out?</p>
+      <p>— Which of the identified AI opportunity areas do you see as the biggest pain point day-to-day?</p>
+      <p>— What does a typical week look like in terms of manual effort on these processes?</p>
+      <p>— Where do things break down most often — what causes the most rework or delays?</p>
+      <p>— Are there any existing tools or automations in place that we should know about?</p>
+      <p>— What would "success" look like for you personally from this engagement?</p>
+      <p style="margin-top:16px;"><strong>For Sarah:</strong></p>
+      <p>— Has anything changed since the Mar 5 deep dive in terms of priorities or scope?</p>
+      <p>— How should we structure the ongoing discovery sessions — who else should we talk to?</p>
+      <p>— What's the current status of vendor onboarding — are we clear to work, or still waiting on approvals?</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="accordion-trigger" onclick="toggleAcc(this)">
+      <span class="accordion-arrow">▶</span>
+      <span class="acc-type com">COM</span>
+      Vendor onboarding status
+    </button>
+    <div class="accordion-body">
+      <p><strong>Current status (as of 27 Mar):</strong> Trish Tosczak resubmitted the routing request (RR #2455959) and Angie Manahan confirmed she was reactivating it for approval. The portal invite should be going to James Mayo.</p>
+      <p><strong>Open question:</strong> We don't have confirmation that the onboarding is fully complete. This may need to be addressed today — clarify whether we can proceed with discovery work in parallel or if there are formal blockers.</p>
+      <p><strong>Key people on the admin side:</strong> Trish Tosczak (Supplier Relations), Angie Manahan (approver), Lori Trevino (portal operations), Jared Kaluski (procurement oversight).</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="accordion-trigger" onclick="toggleAcc(this)">
+      <span class="accordion-arrow">▶</span>
+      <span class="acc-type show">SHOW</span>
+      Procurement case studies to reference
+    </button>
+    <div class="accordion-body">
+      <p>Tom mentioned during the Use Case meeting that Conquer has done procurement/supply chain work with other clients. He offered to check whether those clients would allow us to share case study details.</p>
+      <p><strong>Action:</strong> If we have permission, referencing relevant procurement case studies today would build credibility with the new stakeholders. If not, keep it general — "we've done similar work in procurement and supply chain for other listed companies."</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SECTION: RISKS & WATCH POINTS -->
+<div id="risks" class="section">
+<div class="content-wrap">
+
+  <div class="section-eyebrow">Risks & Watch Points</div>
+  <h2 class="section-headline">Things to keep<br>front of mind.</h2>
+
+  <div class="hook-block warn">
+    <span class="hook-label">Watch out — Vendor onboarding may not be complete: </span>The last email thread (27 Mar) showed the routing was being resubmitted and reactivated. We don't have a confirmed "you're in" message. If there are formal blockers to starting work, we need to know today. Don't assume we're clear — ask.
+  </div>
+
+  <div class="hook-block warn">
+    <span class="hook-label">Watch out — New faces, new dynamics: </span>Amiee, Todd, and Sudharshana haven't been in any previous meetings. They may not share Sarah's enthusiasm or understanding of Conquer. They may be sceptical about yet another external party being brought in. Listen more than you talk. Earn their trust independently of Sarah's endorsement.
+  </div>
+
+  <div class="hook-block warn">
+    <span class="hook-label">Watch out — TCS overlap: </span>TCS is already moving some procurement activities to low-cost locations. We need to understand exactly where TCS is operating and ensure our AI work complements rather than conflicts with their scope. If we tread on TCS territory, we'll create internal friction.
+  </div>
+
+  <div class="hook-block danger">
+    <span class="hook-label">Don't do this — Scope creep: </span>There are multiple AI opportunity areas and a second use case (bids & tenders) in the pipeline. Today is about confirming one starting point and getting into the work. Do not try to expand scope, pitch on the second use case, or suggest work beyond the agreed MVP approach. Trust is built by delivering, not by promising.
+  </div>
+
+  <div class="hook-block good">
+    <span class="hook-label">Why this is a strategic account: </span>Weatherford is a $5.5B NASDAQ-listed oilfield services company with 18,000 employees across 75 countries. A successful procurement AI MVP here opens the door to the bids & tenders use case, other functions, and a major enterprise reference. Sarah is a strong champion, the commercial model is agreed, and the use case is clearly scoped. This is one of the cleanest paths to a meaningful engagement we've had.
+  </div>
+
+  <div class="hook-block good">
+    <span class="hook-label">No NDA on file: </span>Worth noting that there's no NDA in place yet. This hasn't blocked progress so far, but as we move into discovery and start accessing workflow details, this may need to be formalised. Don't raise it unprompted today — but be aware it may come up.
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div style="padding:40px 0; text-align:center; font-size:12px; color:var(--text-3); border-top:1px solid var(--border);">
+  <div class="content-wrap">
+    Conquer AI · Weatherford Engagement Kick-Off Brief · April 2026 · Internal use only
+  </div>
+</div>
+
+<script>
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const arrow = btn.querySelector('.accordion-arrow');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+}
+
+// Nav active state on scroll
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 80) current = s.id;
+  });
+  navLinks.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
